@@ -1,0 +1,7 @@
+---
+
+- include: link_files.yml
+  with_items:
+    - "{{ symlink_file_globs }}"
+  loop_control:
+    loop_var: link

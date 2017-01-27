@@ -1,0 +1,9 @@
+---
+
+- name: Symlink files to {{ link.path % '' }}
+  file:
+    state: link
+    src: "{{ item }}"
+    dest: "{{ link.path % (item | basename | regex_replace('dot_(.*).symlink', '.\\1')) }}"
+  with_fileglob:
+    - "{{ link.glob }}"
