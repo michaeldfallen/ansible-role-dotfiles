@@ -6,3 +6,8 @@ default_symlink_file_globs:
     path: '~/%s'
 
 symlink_file_globs: "{{ default_symlink_file_globs }}"
+
+copy_files: []
+
+link_files: []
+

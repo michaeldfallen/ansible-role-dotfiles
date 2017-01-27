@@ -5,3 +5,18 @@
     - "{{ symlink_file_globs }}"
   loop_control:
     loop_var: link
+
+- name: Copy {{ item.src }} to {{ item.dest }}
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - "{{ copy_files }}"
+
+- name: Symlink {{ item.src }} to {{ item.dest }}
+  file:
+    state: link
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - "{{ link_files }}"
