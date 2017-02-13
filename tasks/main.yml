@@ -10,6 +10,7 @@
   copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
+    force: yes
   with_items:
     - "{{ copy_files }}"
 
@@ -18,5 +19,6 @@
     state: link
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
+    force: yes
   with_items:
     - "{{ link_files }}"

@@ -1,9 +1,51 @@
 ---
 
-- name: Symlink files to {{ link.path % '' }}
+- find:
+    patterns: "{{ link.glob }}"
+    file_type: 'file'
+    path: "{{ inventory_dir }}"
+    hidden: yes
+    recurse: yes
+  delegate_to: localhost
+  register: files
+
+- find:
+    patterns: "{{ link.glob }}"
+    file_type: 'directory'
+    path: "{{ inventory_dir }}"
+    hidden: yes
+    recurse: yes
+  delegate_to: localhost
+  register: folders
+
+- debug: var=folders
+
+# - fail: msg="faiileed"
+# 
+# - name: "Backup if not a symlink"
+#   copy:
+#     src: "{{ item.path }}"
+#     dest: "{{ item.path }}.bak" 
+#     force: yes
+#   with_items:
+#     - "{{ files.files }}"
+#     - "{{ folders.files }}"
+# 
+# - name: "Delete old files"
+#   file:
+#     state: absent
+#     dest: "{{ link.path % (item.path | basename | regex_replace('dot_(.*).symlink', '.\\1')) }}"
+#     force: yes
+#   with_items:
+#     - "{{ files.files }}"
+#     - "{{ folders.files }}"
+
+- name: "Symlink files to {{ link.path % '' }}"
   file:
     state: link
-    src: "{{ item }}"
-    dest: "{{ link.path % (item | basename | regex_replace('dot_(.*).symlink', '.\\1')) }}"
-  with_fileglob:
-    - "{{ link.glob }}"
+    src: "{{ item.path }}"
+    dest: "{{ link.path % (item.path | basename | regex_replace('dot_(.*).symlink', '.\\1')) }}"
+    force: yes
+  with_items:
+    - "{{ files.files }}"
+    - "{{ folders.files }}"
